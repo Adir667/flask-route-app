@@ -1,0 +1,119 @@
+{
+	"info": {
+		"_postman_id": "e86a87fe-7df3-42d0-99e8-7b9dc98d744a",
+		"name": "Xomnia",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31843645"
+	},
+	"item": [
+		{
+			"name": "available_ships",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/available_ships",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"available_ships"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "avg_speed_per_hour",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/avg_speed_per_hour?date=2019-02-13",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"avg_speed_per_hour"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2019-02-13"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "wind_speed_daily",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/wind_speed_daily/st-1a2090",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"wind_speed_daily",
+						"st-1a2090"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "visualize_conditions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/visualize_conditions/st-1a2090?date=2019-02-13",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"visualize_conditions",
+						"st-1a2090"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2019-02-13"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "download_db",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/download_db",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"download_db"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
