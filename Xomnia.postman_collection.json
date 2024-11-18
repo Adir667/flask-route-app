@@ -12,12 +12,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/available_ships",
-					"protocol": "http",
+					"raw": "{{hostt}}/available_ships",
 					"host": [
-						"localhost"
+						"{{hostt}}"
 					],
-					"port": "5000",
 					"path": [
 						"available_ships"
 					]
@@ -31,12 +29,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/avg_speed_per_hour?date=2019-02-13",
-					"protocol": "http",
+					"raw": "{{hostt}}/avg_speed_per_hour?date=2019-02-13",
 					"host": [
-						"localhost"
+						"{{hostt}}"
 					],
-					"port": "5000",
 					"path": [
 						"avg_speed_per_hour"
 					],
@@ -56,12 +52,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/wind_speed_daily/st-1a2090",
-					"protocol": "http",
+					"raw": "{{hostt}}/wind_speed_daily/st-1a2090",
 					"host": [
-						"localhost"
+						"{{hostt}}"
 					],
-					"port": "5000",
 					"path": [
 						"wind_speed_daily",
 						"st-1a2090"
@@ -76,12 +70,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/visualize_conditions/st-1a2090?date=2019-02-13",
-					"protocol": "http",
+					"raw": "{{hostt}}/visualize_conditions/st-1a2090?date=2019-02-13",
 					"host": [
-						"localhost"
+						"{{hostt}}"
 					],
-					"port": "5000",
 					"path": [
 						"visualize_conditions",
 						"st-1a2090"
@@ -102,18 +94,26 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/download_db",
-					"protocol": "http",
+					"raw": "{{hostt}}/download_db",
 					"host": [
-						"localhost"
+						"{{hostt}}"
 					],
-					"port": "5000",
 					"path": [
 						"download_db"
 					]
 				}
 			},
 			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "host"
+		},
+		{
+			"key": "hostt",
+			"value": "http://localhost:5000"
 		}
 	]
 }
