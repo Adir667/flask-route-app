@@ -2,6 +2,9 @@ from repositories.repo import ShipRouteRepository
 from datetime import datetime
 from sqlalchemy import func
 from models.model import Ship, Message, WeatherData, WeatherStation
+import requests
+import os
+from dotenv import load_dotenv
 
 DEFAULT_DISTANCE_TOLERANCE = 1
 
@@ -253,13 +256,41 @@ class ShipRouteService:
                 print(f"No weather report found for closest time.")
                 return {}
 
-            # Step 7: Return the weather data in a simple format
+            # Step 7: Get an image by weather description
+            base_query = 'cargo ship in'
+            full_query = f"{base_query} {closest_weather_report.description}"
+            image_url = self.get_image_from_unsplash(full_query)
+
+            # Step 8: Return the weather data in a simple format
             return {
                 "temperature": closest_weather_report.temperature,
                 "wind_speed": closest_weather_report.wind_speed,
-                "description": closest_weather_report.description
+                "description": closest_weather_report.description,
+                "image_url": image_url
             }
 
         except Exception as e:
             print(f"Error in get_daily_weather_data_per_ship: {str(e)}")
             return {"error": str(e)}
+
+    def get_image_from_unsplash(self, query):
+        try:
+            # Access the Unsplash API key from environment variables
+            access_key = os.getenv("UNSPLASH_ACCESS_KEY")
+            if not access_key:
+                raise ValueError("Unsplash API access key not set in environment variables.")
+
+            # Base URL for Unsplash search API
+            url = f"https://api.unsplash.com/search/photos?query={query}&client_id={access_key}"
+
+            response = requests.get(url)
+            response.raise_for_status()
+            data = response.json()
+
+            if data['results']:
+                return str(data['results'][0]['urls']['regular']).split('?')[0]
+            else:
+                return None
+        except Exception as e:
+            print(f"Error fetching image from Unsplash: {e}")
+            return None
