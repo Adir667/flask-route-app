@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import func
 from models.model import Ship, Message, WeatherData, WeatherStation
 
-DEFAULT_DISTANCE_TOLERANCE = 0.5
+DEFAULT_DISTANCE_TOLERANCE = 1
 
 class ShipRouteService:
     def __init__(self, session):
@@ -48,10 +48,7 @@ class ShipRouteService:
                 'avg_speed': avg_speed
             })
 
-        return {
-            "date": date,
-            "avg_speed_by_ship": result
-        }
+        return result
 
     def get_daily_wind_speed_per_ship(self, ship_name):
         try:
@@ -67,8 +64,8 @@ class ShipRouteService:
                     Message.lon,
                     func.date(Message.timestamp).label("date")
                 )
-                .join(Ship, Ship.id == Message.ship_id)  # Join with the Ship table
-                .filter(Ship.name == ship_name)  # Filter by ship name
+                .join(Ship, Ship.id == Message.ship_id)
+                .filter(Ship.name == ship_name)
                 .all()
             )
 
@@ -127,8 +124,6 @@ class ShipRouteService:
                             WeatherData.station_id,
                             func.max(WeatherData.wind_speed).label("max_wind_speed"),
                             func.min(WeatherData.wind_speed).label("min_wind_speed"),
-                            func.max(WeatherData.time).label("max_hour"),
-                            func.min(WeatherData.time).label("min_hour"),
                         )
                         .filter(
                             WeatherData.station_id.in_([s["station_id"] for s in relevant_stations]),
@@ -149,11 +144,7 @@ class ShipRouteService:
 
                         wind_speed_results[date] = {
                             "max_wind_speed": day_max_speed.max_wind_speed,
-                            "max_station": day_max_speed.station_id,
-                            "max_hour": day_max_speed.max_hour.strftime("%H:%M:%S") if day_max_speed.max_hour else None,
                             "min_wind_speed": day_min_speed.min_wind_speed,
-                            "min_station": day_min_speed.station_id,
-                            "min_hour": day_min_speed.min_hour.strftime("%H:%M:%S") if day_min_speed.min_hour else None,
                         }
 
                     else:
@@ -166,41 +157,6 @@ class ShipRouteService:
         except Exception as e:
             print(f"Error in get_daily_wind_speed_per_ship: {str(e)}")
             return {"error": str(e)}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     def get_daily_weather_data_per_ship(self, ship_name, date):
         try:
@@ -217,8 +173,8 @@ class ShipRouteService:
                 )
                 .join(Ship, Ship.id == Message.ship_id)
                 .filter(Ship.name == ship_name, func.date(Message.timestamp) == date)
-                .order_by(Message.timestamp)  # Get the first message of the day
-                .first()  # Only get the first message
+                .order_by(Message.timestamp)
+                .first()
             )
 
             if not ship_message:
@@ -232,10 +188,6 @@ class ShipRouteService:
 
             # Step 3: Query all stations (instead of using a tolerance filter)
             stations = self.session.query(WeatherStation).all()
-
-            if not stations:
-                print(f"No weather stations found.")
-                return {}
 
             # Step 4: Find the closest station by calculating absolute differences in lat/lon
             closest_station = None
@@ -271,7 +223,7 @@ class ShipRouteService:
                     WeatherData.station_id == closest_station.station_id,
                     WeatherData.date == date
                 )
-                .all()  # Get all data for the station on that date
+                .all()
             )
 
             if not weather_data:
@@ -302,12 +254,10 @@ class ShipRouteService:
                 return {}
 
             # Step 7: Return the weather data in a simple format
-            # Convert times to string for JSON serialization
             return {
                 "temperature": closest_weather_report.temperature,
                 "wind_speed": closest_weather_report.wind_speed,
-                "description": closest_weather_report.description,
-                "weather_time": closest_weather_report.time.strftime("%H:%M:%S")  # Convert time to string
+                "description": closest_weather_report.description
             }
 
         except Exception as e:
