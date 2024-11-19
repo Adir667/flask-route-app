@@ -111,12 +111,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{hostt}}/map/st-1a2090/2019-02-13",
+					"raw": "{{hostt}}/maps/st-1a2090/2019-02-13",
 					"host": [
 						"{{hostt}}"
 					],
 					"path": [
-						"map",
+						"maps",
 						"st-1a2090",
 						"2019-02-13"
 					]
