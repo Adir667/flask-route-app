@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy import func
 from models.model import Ship, Message, WeatherData, WeatherStation
 import requests
+import folium
 import os
 from dotenv import load_dotenv
 
@@ -261,12 +262,16 @@ class ShipRouteService:
             full_query = f"{base_query} {closest_weather_report.description}"
             image_url = self.get_image_from_unsplash(full_query)
 
-            # Step 8: Return the weather data in a simple format
+            # Step 8: Get an image by weather description
+            route_html = self.generate_visual_route_on_map(ship_name, date)
+
+            # Step 9: Return the weather data in a simple format
             return {
                 "temperature": closest_weather_report.temperature,
                 "wind_speed": closest_weather_report.wind_speed,
                 "description": closest_weather_report.description,
-                "image_url": image_url
+                "image_url": image_url,
+                "route_html": route_html
             }
 
         except Exception as e:
@@ -294,3 +299,48 @@ class ShipRouteService:
         except Exception as e:
             print(f"Error fetching image from Unsplash: {e}")
             return None
+        
+    def generate_visual_route_on_map(self, ship_name, day):
+        # Query the ship by name to get its ID
+        ship = self.session.query(Ship).filter(Ship.name == ship_name).first()
+        if not ship:
+            print(f"Ship with name '{ship_name}' not found.")
+            return
+
+        # Query relevant messages using the ship ID
+        messages = self.session.query(Message).filter(
+            Message.ship_id == ship.id,
+            Message.timestamp >= f"{day} 00:00:00",
+            Message.timestamp <= f"{day} 23:59:59"
+        ).order_by(Message.timestamp).all()
+
+        # Ensure we have data
+        if not messages:
+            print(f"No data found for Ship: {ship_name} on Date: {day}")
+            return "no available visual route"
+
+        # Extract coordinates
+        coordinates = [(msg.lat, msg.lon) for msg in messages]
+
+        # Initialize the map centered at the first coordinate
+        m = folium.Map(location=coordinates[0], zoom_start=10, tiles="OpenStreetMap")
+        
+        # Add route line
+        folium.PolyLine(coordinates, color="blue", weight=2.5, opacity=1).add_to(m)
+        
+        # Add markers for each point
+        for i, coord in enumerate(coordinates):
+            folium.Marker(coord, tooltip=f"Point {i + 1}").add_to(m)
+
+        # Prepare paths
+        maps_dir = "data/maps"  # Base directory for maps
+        ship_dir = os.path.join(maps_dir, ship_name)  # Subdirectory for the ship
+        day_file = os.path.join(ship_dir, f"{day}.html")  # Full path for the HTML file
+
+        # Ensure directories exist
+        os.makedirs(ship_dir, exist_ok=True)
+
+        # Save the map
+        m.save(day_file)
+        print(f"Map saved to {day_file}")
+        return f"maps/{ship_name}/{day}.html"

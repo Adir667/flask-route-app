@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "available_ships",
+			"name": "/available_ships",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -24,7 +24,7 @@
 			"response": []
 		},
 		{
-			"name": "avg_speed_per_hour",
+			"name": "/avg_speed_per_hour",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -47,7 +47,7 @@
 			"response": []
 		},
 		{
-			"name": "wind_speed_daily",
+			"name": "/wind_speed_daily",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -65,7 +65,7 @@
 			"response": []
 		},
 		{
-			"name": "visualize_conditions",
+			"name": "/visualize_conditions",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -89,7 +89,7 @@
 			"response": []
 		},
 		{
-			"name": "download_db",
+			"name": "/download_db",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -100,6 +100,25 @@
 					],
 					"path": [
 						"download_db"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/maps/<ship_name>/<day>",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{hostt}}/map/st-1a2090/2019-02-13",
+					"host": [
+						"{{hostt}}"
+					],
+					"path": [
+						"map",
+						"st-1a2090",
+						"2019-02-13"
 					]
 				}
 			},

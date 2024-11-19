@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from services.service import ShipRouteService
 from models.model import Base
+import os
 
 app = Flask(__name__)
 
@@ -86,6 +87,15 @@ def download_db():
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
+@app.route('/maps/<ship_name>/<day>', methods=['GET'])
+def get_map(ship_name, day):
+    filename = os.path.join("data", "maps", f"{ship_name}/{day}.html")
+    try:
+        # Serve the file as an attachment or directly in the browser
+        return send_file(filename, as_attachment=False, mimetype='text/html')
+    except FileNotFoundError:
+        return {"error": f"Map for ship '{ship_name}' on date '{day}' not found."}, 404 
+      
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

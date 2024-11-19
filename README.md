@@ -24,3 +24,6 @@ Returns a visualization (summary) of weather conditions for the specified ship a
 5.[GET] /download_db
 Allows downloading the SQLite database used by the application.
 
+6.[GET] /maps/<ship_name>/<day>
+Returns an html file with the route visualzied on a map. Is generated after triggering "visualize_conditions" endpoint.
+
